@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+    container_name: medlink-app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/
+
+  nginx:
+    image: nginx:1.19-alpine
+    container_name: medlink-nginx
+    restart: on-failure
+    ports:
+      - "8066:80"
+    volumes:
+      - .:/var/www/
+      - ./nginx:/etc/nginx/conf.d
