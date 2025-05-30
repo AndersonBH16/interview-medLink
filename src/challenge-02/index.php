@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 /**
- * Encuentra la subcadena más corta de N que contenga todos los caracteres de K.
+ * Encuentra la subcadena más corta en el primer string N que contenga todos los caracteres del segundo valor.
  *
  * @param array{string, string} $strArr
  * @return string
  */
 function noIterate(array $strArr): string
 {
-    [$firstValue, $secondValue] = $strArr;
+    [$n, $k] = $strArr;
 
-    $need = array_count_values(str_split($secondValue));
+    $need = array_count_values(str_split($k));
     $have = [];
     $required = array_sum($need);
 
@@ -21,8 +21,8 @@ function noIterate(array $strArr): string
     $minLen = PHP_INT_MAX;
     $minStart = 0;
 
-    for ($right = 0, $len = strlen($firstValue); $right < $len; $right++) {
-        $char = $firstValue[$right];
+    for ($right = 0, $len = strlen($n); $right < $len; $right++) {
+        $char = $n[$right];
 
         if (isset($need[$char])) {
             $have[$char] = ($have[$char] ?? 0) + 1;
@@ -38,7 +38,7 @@ function noIterate(array $strArr): string
                 $minStart = $left;
             }
 
-            $leftChar = $firstValue[$left];
+            $leftChar = $n[$left];
             if (isset($need[$leftChar])) {
                 if ($have[$leftChar] <= $need[$leftChar]) {
                     $matched--;
@@ -49,7 +49,7 @@ function noIterate(array $strArr): string
         }
     }
 
-    return $minLen === PHP_INT_MAX ? '' : substr($firstValue, $minStart, $minLen);
+    return $minLen === PHP_INT_MAX ? '' : substr($n, $minStart, $minLen);
 }
 
 // keep this function call here

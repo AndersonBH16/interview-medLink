@@ -1,0 +1,76 @@
+const { v4: uuidv4 } = require('uuid');
+
+let users = [];
+
+const getAllUsers = () => users;
+
+const getUserById = (id) => users.find(user => user.id === id);
+
+const createUser = (data) => {
+  const newUser = { id: uuidv4(), ...data };
+  users.push(newUser);
+  return newUser;
+};
+
+const updateUser = (id, data) => {
+  const index = users.findIndex(user => user.id === id);
+  if (index !== -1) {
+    users[index] = { ...users[index], ...data };
+    return users[index];
+  }
+  return null;
+};
+
+const deleteUser = (id) => {
+  const index = users.findIndex(user => user.id === id);
+  if (index !== -1) {
+    return users.splice(index, 1)[0];
+  }
+  return null;
+};
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+};
+
+
+
+
+user.controller:
+const userModel = require('../models/user.model');
+
+exports.getAll = (req, res) => {
+  res.json(userModel.getAllUsers());
+};
+
+exports.getOne = (req, res) => {
+  const user = userModel.getUserById(req.params.id);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json(user);
+};
+
+exports.create = (req, res) => {
+  const { name, email } = req.body;
+  if (!name || !email) return res.status(400).json({ error: 'Missing fields' });
+
+  const newUser = userModel.createUser({ name, email });
+  res.status(201).json(newUser);
+};
+
+exports.update = (req, res) => {
+  const { name, email } = req.body;
+  const updatedUser = userModel.updateUser(req.params.id, { name, email });
+
+  if (!updatedUser) return res.status(404).json({ error: 'User not found' });
+  res.json(updatedUser);
+};
+
+exports.remove = (req, res) => {
+  const deletedUser = userModel.deleteUser(req.params.id);
+  if (!deletedUser) return res.status(404).json({ error: 'User not found' });
+  res.json({ message: 'User deleted' });
+};
